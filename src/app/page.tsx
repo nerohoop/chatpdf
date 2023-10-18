@@ -1,3 +1,4 @@
+import FileUpload from "@/components/FileUpload";
 import { Button } from "@/components/ui/button";
 import { auth, UserButton } from "@clerk/nextjs";
 import { ArrowRight, LogIn } from "lucide-react";
@@ -23,16 +24,18 @@ export default async function Home() {
             anwer questions and understand research with AI
           </p>
 
-          {isAuth ? (
-            <h1>Logged In!</h1>
-          ) : (
-            <Link href="/sign-in">
-              <Button>
-                Login to get Started!
-                <LogIn className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
-          )}
+          <div className="w-full mt-4">
+            {isAuth ? (
+              <FileUpload />
+            ) : (
+              <Link href="/sign-in">
+                <Button>
+                  Login to get Started!
+                  <LogIn className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </div>
