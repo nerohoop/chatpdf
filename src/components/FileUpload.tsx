@@ -12,7 +12,7 @@ const FileUpload = () => {
   const router = useRouter();
   const [uploading, setUploading] = React.useState(false);
 
-  // isPending test if this is the same as uploading
+  // why using useMutation?
   const { mutate, isPending } = useMutation({
     mutationFn: async ({
       file_key,
@@ -41,6 +41,8 @@ const FileUpload = () => {
 
       try {
         setUploading(true);
+
+        // upload to S3 to get file name and file key
         const data = await uploadToS3(file);
         console.log("uploading to S3", data);
 
@@ -49,10 +51,11 @@ const FileUpload = () => {
           return;
         }
 
+        // start the post query to create new chat
         mutate(data, {
           onSuccess: ({ chat_id }) => {
-            toast.success("Chat created!");
-            router.push(`/chat/${chat_id}`);
+            toast.success("Chat created successfully");
+            router.push("/chat/${chat_id}");
           },
           onError: (err) => {
             toast.error("Error creating chat");
@@ -70,6 +73,8 @@ const FileUpload = () => {
   return (
     <div className="p-2 bg-white rounded-xl">
       <div
+        // The getRootProps function returns an object containing properties
+        // that should be spread onto the container element of your dropzone.
         {...getRootProps({
           className:
             "border-dashed border-2 rounded-xl cursor-pointer bg-gray-50 py-8 flex justify-center items-center flex-col",

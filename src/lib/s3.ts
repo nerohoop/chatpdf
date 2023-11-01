@@ -8,7 +8,7 @@ export async function uploadToS3(file: File) {
     });
 
     const file_key =
-      "uploads/" + Date.now().toString() + file.name.replace(" ", "-");
+      "uploads/" + Date.now().toString() + "_" + file.name.replace(" ", "-");
 
     const s3 = new AWS.S3({
       params: {
