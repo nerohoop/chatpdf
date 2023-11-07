@@ -13,9 +13,9 @@ export async function getMatchesFromEmbeddings(
     });
 
     const pineconeIndex = await client.index("chatpdf");
-    const namespace = pineconeIndex.namespace(convertToAscii(fileKey));
+    // const namespace = pineconeIndex.namespace(convertToAscii(fileKey));
 
-    const queryResult = await namespace.query({
+    const queryResult = await pineconeIndex.query({
       topK: 5,
       vector: embeddings,
       includeMetadata: true,

@@ -7,19 +7,13 @@ import {
   RecursiveCharacterTextSplitter,
 } from "@pinecone-database/doc-splitter";
 import { getEmbeddings } from "./embeddings";
-import { log } from "console";
 import { convertToAscii } from "./utils";
 
-let pinecone: Pinecone | null = null;
-
-export const getPineconeClient = async () => {
-  if (!pinecone) {
-    pinecone = new Pinecone({
-      apiKey: process.env.PINECONE_API_KEY!,
-      environment: process.env.PINECONE_ENVIRONMENT!,
-    });
-  }
-  return pinecone;
+export const getPineconeClient = () => {
+  return new Pinecone({
+    environment: process.env.PINECONE_ENVIRONMENT!,
+    apiKey: process.env.PINECONE_API_KEY!,
+  });
 };
 
 type PDFPage = {
@@ -30,33 +24,31 @@ type PDFPage = {
 };
 
 export async function loadS3IntoPinecone(fileKey: string) {
-  // 1. obtain the pdf -> download and read from pdf
-  console.log("downloading s3 into file system");
-
+  // 1. obtain the pdf -> downlaod and read from pdf
+  console.log("***** downloading s3 into file system");
   const file_name = await downloadFromS3(fileKey);
   if (!file_name) {
-    throw new Error("fail to download file from S3");
+    throw new Error("could not download from s3");
   }
-
+  console.log("***** 1. loading pdf into memory" + file_name);
   const loader = new PDFLoader(file_name);
   const pages = (await loader.load()) as PDFPage[];
-  console.log("loaded pdf pages", pages);
 
-  // 2. split and segment the pdf into pages
+  // 2. split and segment the pdf
   const documents = await Promise.all(pages.map(prepareDocument));
-  console.log("split pdf into pages", documents);
+  console.log("***** 2. split and segment the pdf");
 
   // 3. vectorise and embed individual documents
   const vectors = await Promise.all(documents.flat().map(embedDocument));
-  console.log("vectorise and embed documents", vectors);
+  console.log("***** 3. vectorise and embed individual documents");
 
   // 4. upload to pinecone
   const client = await getPineconeClient();
   const pineconeIndex = await client.index("chatpdf");
-  const namespace = pineconeIndex.namespace(convertToAscii(fileKey));
+  // const namespace = pineconeIndex.namespace(convertToAscii(fileKey));
 
-  console.log("inserting vectors into pinecone");
-  await namespace.upsert(vectors);
+  console.log("***** 4. inserting vectors into pinecone index");
+  await pineconeIndex.upsert(vectors);
 
   return documents[0];
 }

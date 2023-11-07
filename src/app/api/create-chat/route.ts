@@ -21,9 +21,10 @@ export async function POST(req: Request, res: Response) {
   try {
     const body = await req.json();
     const { file_key, file_name } = body;
-    console.log("Creating chat for file: ", file_key, file_name);
+    console.log("**** 0. Creating chat for file: ", file_key, file_name);
 
     await loadS3IntoPinecone(file_key);
+    console.log("**** 5.Finish loading PDF into Pinecone");
 
     const chat_id = await db
       .insert(chats)
@@ -36,6 +37,8 @@ export async function POST(req: Request, res: Response) {
       .returning({
         insertedId: chats.id,
       });
+
+    console.log("**** 6.Chat created ", chat_id);
 
     return NextResponse.json(
       {

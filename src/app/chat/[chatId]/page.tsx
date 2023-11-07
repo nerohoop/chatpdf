@@ -1,13 +1,13 @@
-import React from "react";
-import { auth } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
-import { db } from "@/lib/db";
-import { chats } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import ChatComponent from "@/components/ChatComponent";
 import ChatSideBar from "@/components/ChatSideBar";
 import PDFViewer from "@/components/PDFViewer";
-import ChatComponent from "@/components/ChatComponent";
+import { db } from "@/lib/db";
+import { chats } from "@/lib/db/schema";
 import { checkSubscription } from "@/lib/subscription";
+import { auth } from "@clerk/nextjs";
+import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
+import React from "react";
 
 type Props = {
   params: {
@@ -32,11 +32,11 @@ const ChatPage = async ({ params: { chatId } }: Props) => {
   const isPro = await checkSubscription();
 
   return (
-    <div className="flex max-h-screen overflow-scroll">
+    <div className="flex min-h-screen overflow-scroll">
       <div className="flex w-full max-h-screen overflow-scroll">
         {/* chat sidebar */}
         <div className="flex-[1] max-w-xs">
-          <ChatSideBar chats={_chats} chatId={parseInt(chatId)} />
+          <ChatSideBar chats={_chats} chatId={parseInt(chatId)} isPro={isPro} />
         </div>
         {/* pdf viewer */}
         <div className="max-h-screen p-4 oveflow-scroll flex-[5]">
