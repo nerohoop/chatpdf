@@ -21,9 +21,9 @@ export async function POST(req: Request, res: Response) {
   try {
     const body = await req.json();
     const { file_key, file_name } = body;
+    console.log("Creating chat for file: ", file_key, file_name);
 
-    // file is already uploaded into S3
-    const pages = await loadS3IntoPinecone(file_key);
+    await loadS3IntoPinecone(file_key);
 
     const chat_id = await db
       .insert(chats)

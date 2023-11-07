@@ -21,12 +21,17 @@ export default async function Home() {
     }
   }
   return (
-    <div className="w-screen min-h-screen bg-gradient-to-r from-rose-100 to-teal-100">
+    <div className="w-screen min-h-screen bg-gradient-to-r from-violet-300 to-violet-400">
+      <div className="absolute top-4 right-0 -translate-x-1/2">
+        <UserButton afterSignOutUrl="/" />
+      </div>
+
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div className="flex flex-col items-center text-center">
           <div className="flex items-center">
-            <h1 className="mr-3 text-5xl font-semibold">Chat with any PDF</h1>
-            <UserButton afterSignOutUrl="/" />
+            <h1 className="mr-3 text-5xl font-semibold font-mono">
+              Chat With Your PDF
+            </h1>
           </div>
 
           <div className="flex mt-2">
@@ -45,8 +50,9 @@ export default async function Home() {
           </div>
 
           <p className="max-w-xl mt-1 text-lg text-slate-600">
-            Join millions of students, researchers and professinals to instantly
-            anwer questions and understand research with AI
+            Your personal AI-powered assistant that not only summarizes lengthy
+            PDFs but also answers your questions about the content, all at no
+            cost.
           </p>
 
           <div className="w-full mt-4">
@@ -54,8 +60,8 @@ export default async function Home() {
               <FileUpload />
             ) : (
               <Link href="/sign-in">
-                <Button>
-                  Login to get Started!
+                <Button className="bg-gradient-to-r from-purple-500 to-pink-500">
+                  Login to get Started
                   <LogIn className="w-4 h-4 ml-2" />
                 </Button>
               </Link>

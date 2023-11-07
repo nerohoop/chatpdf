@@ -12,7 +12,6 @@ const FileUpload = () => {
   const router = useRouter();
   const [uploading, setUploading] = React.useState(false);
 
-  // why using useMutation?
   const { mutate, isPending } = useMutation({
     mutationFn: async ({
       file_key,
@@ -50,6 +49,8 @@ const FileUpload = () => {
           toast.error("file meta data is missing");
           return;
         }
+
+        console.log("Successfully upload to S3, now creating chats");
 
         // start the post query to create new chat
         mutate(data, {
